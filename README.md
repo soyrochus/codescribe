@@ -36,6 +36,8 @@ To use CodeScribe as an MCP server in development mode within this project, add 
 }
 ```
 
+This configuration ensures that the MCP server can find and execute `codescribe-agent.js` correctly when started from the project root.
+
 This tells your MCP-compatible tools (such as VS Code extensions) how to launch the CodeScribe agent locally using Node.js. The agent will communicate over standard input/output and log notes as described above.
 
 Make sure the `.vscode/mcp.json` file is located in the root of your project (inside the `.vscode` folder).
