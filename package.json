@@ -1,0 +1,16 @@
+{
+  "name": "codescribe",
+  "version": "1.0.0",
+  "description": "CodeScribe is a lightweight journaling agent that lets developers log notes, thoughts, and annotations directly from their coding workflow using natural language.",
+  "license": "MIT",
+  "author": "Iwan van der Kleijn <iwanvanderkleijn@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/soyrochus/codescribe"
+  },
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
