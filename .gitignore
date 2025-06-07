@@ -1,9 +1,11 @@
 node_modules
 build
 npm-debug.log
-.env
 .DS_Store
 
-
-# Virtual environments
+# Local environment
 .env
+
+# Journals and lock files
+.journal
+package-lock.json
