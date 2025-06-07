@@ -22,12 +22,27 @@ class JournalTool extends Tool {
   constructor() {
     super();
     this.name = 'journal';
-    this.description = `
-      Log a developer's note into today's journal file inside the '.journal' folder.
-      Use this tool when the user says things like:
-      "note that...", "write down...", "add annotation...", or "make a note..."
-      Input should be the full note content.
-    `;
+    this.description = `Adds a free-form note, idea, reminder, or comment to the developer's personal journal for this project (saved as a dated text file in the '.journal' folder).
+
+Use this tool to record:
+- Work-in-progress thoughts
+- Personal reminders
+- Design decisions
+- Reflections, doubts, or open questions
+- Context about why something was done
+- TODOs or things to revisit
+
+Trigger this tool with any natural instruction such as:
+- "Add a note that..."
+- "Remember to..."
+- "Jot down..."
+- "Make a comment about..."
+- "Add to the project journal that..."
+- "I want to keep track of..."
+
+Do not use this tool for adding documentation or comments inside the source code. Use regular code comments (// ... or /** ... */) or documentation blocks for that purpose.
+
+This journal is for personal context, process notes, or broader observations—anything you want to keep track of during development that doesn't belong directly in the codebase.`;
   }
 
   /**
