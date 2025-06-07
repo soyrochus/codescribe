@@ -8,11 +8,6 @@ CodeScribe is a journaling agent that lets you log coding notes using natural la
 npm install
 ```
 
-Create a `.env` file with your OpenAI API key so the agent can reach the OpenAI API:
-
-```bash
-echo "OPENAI_API_KEY=sk-..." > .env
-```
 
 ## Run
 
@@ -24,3 +19,43 @@ node codescribe-agent.js
 The notes are stored in a `.journal` folder relative to where you run the agent. Each entry is timestamped in the form `[HH:MM:SS] message`.
 
 Once running, send an MCP `callTool` request with your instruction. The agent logs the note in `.journal/YYYY-MM-DD.txt` and returns a confirmation message.
+
+## MCP Server Configuration (Development Mode)
+
+To use CodeScribe as an MCP server in development mode within this project, add the following configuration to your `.vscode/mcp.json` file:
+
+```json
+{
+    "servers":{
+        "codescribe": {
+            "type": "stdio",
+            "command": "node",
+            "args": ["./codescribe-agent.js"]
+        }
+    }
+}
+```
+
+This tells your MCP-compatible tools (such as VS Code extensions) how to launch the CodeScribe agent locally using Node.js. The agent will communicate over standard input/output and log notes as described above.
+
+Make sure the `.vscode/mcp.json` file is located in the root of your project (inside the `.vscode` folder).
+
+## Configuration
+
+1. Create a `.env` file in the project root containing your OpenAI API key:
+
+   ```dotenv
+   OPENAI_API_KEY=your_key_here
+   ```
+
+2. Alternatively, set the `OPENAI_API_KEY` environment variable:
+
+   ```bash
+   export OPENAI_API_KEY=your_key_here
+   ```
+
+## License and Copyright
+
+Copyright (c) 2025, Iwan van der Kleijn
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
