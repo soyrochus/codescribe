@@ -1,7 +1,7 @@
 [project]
-name = "smart-snippets"
+name = "codescribe"
 version = "0.1.0"
-description = "Add your description here"
+description = "CodeScribe is a lightweight journaling agent that lets developers log notes, thoughts, and annotations directly from their coding workflow using natural language."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -9,5 +9,5 @@ dependencies = [
     "python-dotenv>=1.1.0",
     "rich>=13.7.0",
     "markdown>=3.5.0",
-    "mcp[cli]>=1.9.3",
+    "mcp>=1.9.3",
 ]

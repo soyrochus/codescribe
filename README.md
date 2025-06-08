@@ -1,5 +1,7 @@
 # CodeScribe
 
+> **Note:** CodeScribe is intended as an example project for how to create MCP servers in both JavaScript and Python. The project is in a very early stage. It will demonstrate both deterministic tools and tools that use AI, and will likely include additional features such as resource management in the future.
+
 CodeScribe is a lightweight journaling agent that logs developer notes to daily files using natural language prompts. Notes are stored in a `.journal` folder relative to where you run the agent. Both a JavaScript and a Python implementation are provided.
 
 ## Install
@@ -46,10 +48,14 @@ Add the following to `.vscode/mcp.json` depending on the implementation you want
             "command": "node",
             "args": ["./codescribe-agent.js"]
         },
-        "codescribe-py": {
+         "codescribe-py": {
             "type": "stdio",
-            "command": "python",
-            "args": ["./codescribe-agent.py"]
+            "command": "uv",
+            "args": ["run", 
+                "--directory", 
+                "${workspaceFolder}",
+                "${workspaceFolder}/codescribe-agent.py"
+            ]
         }
     }
 }

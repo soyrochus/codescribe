@@ -82,7 +82,7 @@ def run_cli(text: str) -> None:
     ]
 
     response = client.chat.completions.create(
-        model="gpt-4o",
+        model="gpt-4.1-mini",
         messages=messages,
         functions=functions,
         function_call="auto",
@@ -100,23 +100,20 @@ def run_cli(text: str) -> None:
     print(result)
 
 
-async def start_server() -> None:
-    """Start an MCP server exposing the `logNote` tool."""
-    from mcp.server.mcp import McpServer  # type: ignore
-    from mcp.server.stdio import StdioServerTransport  # type: ignore
+def start_server() -> None:
+    from mcp.server.fastmcp import FastMCP
 
-    server = McpServer(
+    mcp = FastMCP(
         name="CodeScribe",
         version="1.0.0",
-        description=DESCRIPTION,
+        description=DESCRIPTION
     )
 
-    @server.tool("logNote", {"note": str})  # type: ignore
-    async def log_note_tool(note: str):
+    @mcp.tool()
+    async def logNote(note: str):
         return {"content": [{"type": "text", "text": log_note(note)}]}
 
-    transport = StdioServerTransport()
-    await server.connect(transport)
+    mcp.run()
 
 
 def main() -> None:
@@ -124,9 +121,7 @@ def main() -> None:
         text = " ".join(sys.argv[1:]).strip()
         run_cli(text)
     else:
-        import asyncio
-
-        asyncio.run(start_server())
+        start_server()
 
 
 if __name__ == "__main__":
