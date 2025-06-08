@@ -3,23 +3,31 @@ import sys
 import json
 from datetime import datetime
 from pathlib import Path
+from typing import List, Any
 from dotenv import load_dotenv
 import openai
 
-# Try to load environment variables from either a provided path or a .env file
-env_path = os.getenv("CODESCRIBE_ENV_PATH", Path(__file__).with_suffix(".env"))
+# Try to load environment variables from a .env file in the same directory as this script
+env_path = Path(__file__).parent / ".env"
+print (f"Loading environment variables from {env_path}")
 load_dotenv(env_path)
 
 openai_api_key = os.getenv("OPENAI_API_KEY")
 
 
-def get_open_api() -> openai.OpenAI:
+def get_open_api(messages : List[dict[str, str]] ) -> Any:
     """Return a configured OpenAI client or raise if no API key."""
     if not openai_api_key:
         raise RuntimeError(
             f"OPENAI_API_KEY missing. Add it to .env at {env_path}"
         )
-    return openai.OpenAI(api_key=openai_api_key)
+    client =  openai.OpenAI(api_key=openai_api_key)
+    response = client.chat.completions.create(
+        model="gpt-4.1-mini",
+        messages=messages,
+        temperature=0,
+    )
+    return response
 
 DESCRIPTION = (
     "Adds a free-form note, idea, reminder, or comment to the developer's personal"
@@ -73,16 +81,11 @@ def summarize_journal(day: str | None = None) -> str:
         raise FileNotFoundError(f"Journal file {file_path} does not exist")
     text = file_path.read_text(encoding="utf-8")
 
-    client = get_open_api()
     messages = [
         {"role": "system", "content": "Summarize the following journal entries."},
         {"role": "user", "content": text},
     ]
-    response = client.chat.completions.create(
-        model="gpt-4.1-mini",
-        messages=messages,
-        temperature=0,
-    )
+    response = get_open_api(messages)
     return response.choices[0].message.content.strip()
 
 
@@ -94,7 +97,6 @@ def categorize_journal(day: str | None = None) -> str:
         raise FileNotFoundError(f"Journal file {file_path} does not exist")
     text = file_path.read_text(encoding="utf-8")
 
-    client = get_open_api()
     prompt = (
         "Tag or categorize each journal entry by theme such as bug, idea, "
         "decision, or question."
@@ -103,11 +105,8 @@ def categorize_journal(day: str | None = None) -> str:
         {"role": "system", "content": prompt},
         {"role": "user", "content": text},
     ]
-    response = client.chat.completions.create(
-        model="gpt-4.1-mini",
-        messages=messages,
-        temperature=0,
-    )
+
+    response = get_open_api(messages)
     return response.choices[0].message.content.strip()
 
 
@@ -146,7 +145,7 @@ def start_server() -> None:
     from mcp.server.fastmcp import FastMCP
 
     mcp = FastMCP(
-        name="CodeScribe",
+        name="Codescribe",
         version="1.0.0",
         description=DESCRIPTION
     )

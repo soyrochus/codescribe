@@ -75,6 +75,29 @@ Add the following to `.vscode/mcp.json` depending on the implementation you want
 
 This tells your MCP-compatible tools how to launch the agent locally. Make sure the `.vscode/mcp.json` file is located in the project root.
 
+## MCP Server Configuration (Python Agent)
+
+To use the Python agent with MCP, add the following to your `.vscode/mcp.json`:
+
+```jsonc
+{
+    "servers":{
+         "codescribe": {
+            "type": "stdio",
+            "command": "uv",
+            "args": ["run", 
+                "--directory", 
+                "${workspaceFolder}",
+                "${workspaceFolder}/codescribe-agent.py",
+                "mcp"
+            ]
+        }
+    }
+}
+```
+
+This configuration ensures the Python agent is started correctly as an MCP server using `uv`.
+
 ## Configuration
 
 1. Create a `.env` file in the project root containing your OpenAI API key:
