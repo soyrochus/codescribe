@@ -1,8 +1,13 @@
+/**  Codescribe - Copyright (c) 2025, licensed: MIT, See LICENSE for details.
+Codescribe MCP Server - A personal journal tool for developers
+This script allows developers to log notes, summarize journal entries, and categorize them by theme.
+
+**/
 const fs = require('fs');
 const path = require('path');
 const dotenv = require('dotenv');
 const { ChatOpenAI } = require('@langchain/openai');
-const { SystemMessage, HumanMessage } = require('langchain/schema');
+const { SystemMessage, HumanMessage } = require('@langchain/core/messages');
 const { McpServer } = require('@modelcontextprotocol/sdk/server/mcp.js');
 const { StdioServerTransport } = require('@modelcontextprotocol/sdk/server/stdio.js');
 const { z } = require('zod');

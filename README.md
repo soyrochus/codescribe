@@ -1,8 +1,42 @@
 # CodeScribe
 
-> **Note:** CodeScribe is intended as an example project for how to create MCP servers in both JavaScript and Python. The project is in a very early stage. It will demonstrate both deterministic tools and tools that use AI, and will likely include additional features such as resource management in the future.
+> **Note:** CodeScribe is intended as an example project for how to create MCP servers in both JavaScript and Python. The project is in a very early, experimental phase. It demonstrates both deterministic tools and tools that use AI, and will likely include additional features such as resource management in the future.
 
-CodeScribe is a lightweight journaling agent that logs developer notes to daily files using natural language prompts. Notes are stored in a `.journal` folder relative to where you run the agent. Both a JavaScript and a Python implementation are provided.
+## About This Project
+
+CodeScribe is an educational example of how to build [Model Context Protocol (MCP)](https://modelcontext.org/) servers in both JavaScript and Python. It is intended for developers interested in agent tool design, MCP integration, and hybrid deterministic/AI workflows.
+
+## Features
+
+- **Journaling:** Log free-form notes, ideas, reminders, and comments to a daily journal file.
+- **Summarization:** Use OpenAI to summarize a day's journal entries.
+- **Categorization:** Use OpenAI to tag/categorize journal entries by theme (e.g., bug, idea, decision, question).
+- **MCP Server:** Exposes tools via MCP protocol for integration with compatible hosts (e.g., VS Code, custom clients).
+- **Command-Line Interface:** All tools are available via CLI for quick local use.
+- **Extensible:** Designed to be extended with new tools, including deterministic and AI-powered ones.
+
+## How It Works
+
+- Journal entries are appended to `.journal/YYYY-MM-DD.txt` in your project root.
+- Each entry is timestamped: `[HH:MM:SS] your note here`
+- Summarization and categorization use OpenAI's GPT models (requires API key).
+
+## Extending CodeScribe
+
+You can add new tools by editing `codescribe-agent.py` (Python) or `codescribe-agent.js` (JavaScript). Tools can be deterministic (pure code) or use AI models. See the source for examples of both.
+
+## Troubleshooting
+
+- **Missing API Key:** Ensure `OPENAI_API_KEY` is set in your `.env` or environment.
+- **MCP Not Connecting:** Check your `.vscode/mcp.json` configuration and that only one agent is running at a time.
+- **Python Dependencies:** Use `uv sync` to install all required packages.
+
+## Resources
+
+- [Model Context Protocol (MCP)](https://modelcontext.org/)
+- [LangChain.js](https://js.langchain.com/)
+- [LangChain Python](https://python.langchain.com/) (Not used in the Python example)
+- [OpenAI API](https://platform.openai.com/docs/api-reference)
 
 ## Install
 
@@ -14,16 +48,17 @@ Uses LangChain.js together with the MCP SDK.
 
 ### Python version
 ```bash
-pip install -e .
+uv sync
 ```
-Uses the `openai` package and the MCP Python SDK.
+
+For node.js we use the default npm package manager. For Pyhthon you will need to install [Uv](https://docs.astral.sh/uv/)
 
 ## Run
 
 ### JavaScript
 Start the MCP server with:
 ```bash
-node codescribe-agent.js
+node codescribe-agent.js mcp
 ```
 
 ### Python
@@ -48,7 +83,14 @@ python codescribe-agent.py tag 2024-05-01   # categorize entries
 python codescribe-agent.py mcp              # start MCP server
 ```
 
-## MCP Server Configuration (Development Mode)
+For the Javascript version you need to use the same commands but using node to run the script, for example:
+
+```bash
+node codescribe-agent.js log "my note here"
+# etc..
+```
+
+## MCP Server Configuration for VSCode
 
 Add the following to `.vscode/mcp.json` depending on the implementation you want to run:
 
@@ -66,30 +108,8 @@ Add the following to `.vscode/mcp.json` depending on the implementation you want
             "args": ["run", 
                 "--directory", 
                 "${workspaceFolder}",
-                "${workspaceFolder}/codescribe-agent.py"
-            ]
-        }
-    }
-}
-```
-
-This tells your MCP-compatible tools how to launch the agent locally. Make sure the `.vscode/mcp.json` file is located in the project root.
-
-## MCP Server Configuration (Python Agent)
-
-To use the Python agent with MCP, add the following to your `.vscode/mcp.json`:
-
-```jsonc
-{
-    "servers":{
-         "codescribe": {
-            "type": "stdio",
-            "command": "uv",
-            "args": ["run", 
-                "--directory", 
-                "${workspaceFolder}",
                 "${workspaceFolder}/codescribe-agent.py",
-                "mcp"
+                "run"
             ]
         }
     }
@@ -97,6 +117,9 @@ To use the Python agent with MCP, add the following to your `.vscode/mcp.json`:
 ```
 
 This configuration ensures the Python agent is started correctly as an MCP server using `uv`.
+
+This tells your MCP-compatible tools how to launch the agent locally. Make sure the `.vscode/mcp.json` file is located in the project root. Only use one of the two implementation as otherwise Github Copilot might get confused about which Agent to run.
+
 
 ## Configuration
 

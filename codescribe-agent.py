@@ -1,3 +1,8 @@
+# Codescribe - Copyright (c) 2025, licensed: MIT, See LICENSE for details.
+"""
+Codescribe MCP Server  - A personal journal tool for developers
+This script allows developers to log notes, summarize journal entries, and categorize them by theme.
+"""
 import os
 import sys
 import json
