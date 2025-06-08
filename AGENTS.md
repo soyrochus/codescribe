@@ -1,14 +1,5 @@
-Understood. You want a **tool description** that:
 
-* Clearly signals *what* goes into the journal vs. code documentation.
-* Allows a variety of natural triggers (“add a note,” “write a comment,” “jot this down,” “remember…” etc.), not a fixed phrase.
-* Steers away from direct code documentation.
-
-Here’s a refined, flexible description for the tool—without assuming any fixed invocation phrase:
-
----
-
-**Description for the Journal Tool**
+**Description for the Codescribe**
 
 > Adds a free-form note, idea, reminder, or comment to the developer’s personal journal for this project (saved as a dated text file in the `.journal` folder).
 >
@@ -33,6 +24,12 @@ Here’s a refined, flexible description for the tool—without assuming any fix
 >
 > This journal is for personal context, process notes, or broader observations—anything you want to keep track of during development that doesn’t belong directly in the codebase.
 
----
 
-This makes the distinction explicit, invites a variety of phrasing, and is natural to read—while blocking misuse for in-code documentation. If you want it even more concise or with more examples, just say so.
+Create a pyton version Agent.  DO NOT USE the  node.js version in codescribe-agent.js as an exampke!. Create a fully new version based on the functional description here. Not in any way influenved by the JS function.  Call it codescribe-agent.py. Use the same paradigm, description etc. Use the openai lib instead of Langchain. 
+
+The agent should have a tool log_note which append the note to a log in the "${workspaceFolder}/.journal" folder. The logfile should be created per day. 
+
+Although the OpenAI reference is included, the MCP server does NOT have to include connection with openai (that is for a future extension)
+
+Complete the README file, document both the javascript and python versions in its particulars. Do not duplicate the common parts (like the description etc)
+

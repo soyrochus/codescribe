@@ -1,7 +1,20 @@
+# Nodejs generated files
 node_modules
 build
 npm-debug.log
 .DS_Store
+
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+# configuration files
 
 # Local environment
 .env
@@ -11,3 +24,5 @@ npm-debug.log
 package-lock.json
 
 .vscode/
+
+

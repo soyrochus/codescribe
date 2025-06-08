@@ -1,0 +1,13 @@
+[project]
+name = "smart-snippets"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "openai>=1.79.0",
+    "python-dotenv>=1.1.0",
+    "rich>=13.7.0",
+    "markdown>=3.5.0",
+    "mcp[cli]>=1.9.3",
+]

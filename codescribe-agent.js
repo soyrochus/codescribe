@@ -8,9 +8,11 @@ const { McpServer } = require('@modelcontextprotocol/sdk/server/mcp.js');
 const { StdioServerTransport } = require('@modelcontextprotocol/sdk/server/stdio.js');
 const { z } = require('zod');
 
-dotenv.config();
+// Try to load .env from a parameter, or from script dir if not set
+const envPath = process.env.CODESCRIBE_ENV_PATH || path.join(__dirname, '.env');
+dotenv.config({ path: envPath });
 if (!process.env.OPENAI_API_KEY) {
-  console.error('OPENAI_API_KEY missing. Add it to .env');
+  console.error('OPENAI_API_KEY missing. Add it to .env at', envPath);
   process.exit(1);
 }
 
@@ -38,7 +40,15 @@ Trigger this tool with any natural instruction such as:
 - "Jot down..."
 - "Make a comment about..."
 - "Add to the project journal that..."
-- "I want to keep track of..."
+- "Make a comment about…"
+- "Write down…"
+- "Remember to…"
+- "Capture a thought…"
+- "Add to the journal that…"
+- "Remind me to…"
+- "Log an idea…"
+- "Keep track of…"
+- "Record this observation…"
 
 Do not use this tool for adding documentation or comments inside the source code. Use regular code comments (// ... or /** ... */) or documentation blocks for that purpose.
 
@@ -70,7 +80,7 @@ This journal is for personal context, process notes, or broader observations—a
 async function createExecutor() {
   const llm = new ChatOpenAI({
     openAIApiKey: process.env.OPENAI_API_KEY,
-    modelName: 'gpt-3.5-turbo',
+    modelName: 'gpt-4.1-mini',
     temperature: 0,
   });
   const tools = [new JournalTool()];
@@ -91,7 +101,8 @@ async function runCli(input) {
 async function startServer() {
   const server = new McpServer({
     name: 'CodeScribe',
-    version: '1.0.0'
+    version: '1.0.0',
+    description: 'A journaling tool for developers to log notes and ideas during coding sessions.',
   });
 
   server.tool(
