@@ -1,46 +1,61 @@
 # CodeScribe
 
-CodeScribe is a journaling agent that lets you log coding notes using natural language. It uses LangChain.js, the Model Context Protocol (MCP) SDK and OpenAI to interpret your instructions and write them to daily journal files.
+CodeScribe is a lightweight journaling agent that logs developer notes to daily files using natural language prompts. Notes are stored in a `.journal` folder relative to where you run the agent. Both a JavaScript and a Python implementation are provided.
 
 ## Install
 
+### JavaScript version
 ```bash
 npm install
 ```
+Uses LangChain.js together with the MCP SDK.
 
+### Python version
+```bash
+pip install -e .
+```
+Uses the `openai` package and the MCP Python SDK.
 
 ## Run
 
-Start the MCP server. It listens on stdin/stdout so it can be invoked by any MCP-compliant host:
-
+### JavaScript
+Start the MCP server with:
 ```bash
 node codescribe-agent.js
 ```
-The notes are stored in a `.journal` folder relative to where you run the agent. Each entry is timestamped in the form `[HH:MM:SS] message`.
 
-Once running, send an MCP `callTool` request with your instruction. The agent logs the note in `.journal/YYYY-MM-DD.txt` and returns a confirmation message.
+### Python
+Start the Python server with:
+```bash
+python codescribe-agent.py
+```
+
+Each version listens on stdin/stdout so it can be invoked by any MCP-compliant host. Entries are appended to `.journal/YYYY-MM-DD.txt` in the form `[HH:MM:SS] message`.
+
+Once running, send an MCP `callTool` request with your instruction. The agent logs the note and returns a confirmation message.
 
 ## MCP Server Configuration (Development Mode)
 
-To use CodeScribe as an MCP server in development mode within this project, add the following configuration to your `.vscode/mcp.json` file:
+Add the following to `.vscode/mcp.json` depending on the implementation you want to run:
 
 ```json
 {
     "servers":{
-        "codescribe": {
+        "codescribe-js": {
             "type": "stdio",
             "command": "node",
             "args": ["./codescribe-agent.js"]
+        },
+        "codescribe-py": {
+            "type": "stdio",
+            "command": "python",
+            "args": ["./codescribe-agent.py"]
         }
     }
 }
 ```
 
-This configuration ensures that the MCP server can find and execute `codescribe-agent.js` correctly when started from the project root.
-
-This tells your MCP-compatible tools (such as VS Code extensions) how to launch the CodeScribe agent locally using Node.js. The agent will communicate over standard input/output and log notes as described above.
-
-Make sure the `.vscode/mcp.json` file is located in the root of your project (inside the `.vscode` folder).
+This tells your MCP-compatible tools how to launch the agent locally. Make sure the `.vscode/mcp.json` file is located in the project root.
 
 ## Configuration
 
