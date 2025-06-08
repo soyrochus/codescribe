@@ -29,12 +29,24 @@ node codescribe-agent.js
 ### Python
 Start the Python server with:
 ```bash
-python codescribe-agent.py
+python codescribe-agent.py mcp
 ```
 
 Each version listens on stdin/stdout so it can be invoked by any MCP-compliant host. Entries are appended to `.journal/YYYY-MM-DD.txt` in the form `[HH:MM:SS] message`.
 
 Once running, send an MCP `callTool` request with your instruction. The agent logs the note and returns a confirmation message.
+
+### Command line usage
+
+The Python version can run tools directly from the command line:
+
+```bash
+python codescribe-agent.py log "my note here"
+python codescribe-agent.py summarize        # summarize today's journal
+python codescribe-agent.py summarize 2024-05-01
+python codescribe-agent.py tag 2024-05-01   # categorize entries
+python codescribe-agent.py mcp              # start MCP server
+```
 
 ## MCP Server Configuration (Development Mode)
 
