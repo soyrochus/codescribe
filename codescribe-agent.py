@@ -12,6 +12,15 @@ load_dotenv(env_path)
 
 openai_api_key = os.getenv("OPENAI_API_KEY")
 
+
+def get_open_api() -> openai.OpenAI:
+    """Return a configured OpenAI client or raise if no API key."""
+    if not openai_api_key:
+        raise RuntimeError(
+            f"OPENAI_API_KEY missing. Add it to .env at {env_path}"
+        )
+    return openai.OpenAI(api_key=openai_api_key)
+
 DESCRIPTION = (
     "Adds a free-form note, idea, reminder, or comment to the developer's personal"
     " journal for this project (saved as a dated text file in the '.journal' folder).\n\n"
@@ -56,48 +65,81 @@ def log_note(note: str) -> str:
     return f"\U0001F4DD Logged note to {rel}"
 
 
-def run_cli(text: str) -> None:
-    """Process the user text through OpenAI and log the note."""
-    if not openai_api_key:
-        print("OPENAI_API_KEY missing. Add it to .env at", env_path, file=sys.stderr)
-        sys.exit(1)
+def summarize_journal(day: str | None = None) -> str:
+    """Summarize the journal entries for a given day using OpenAI."""
+    date_str = day or datetime.now().strftime("%Y-%m-%d")
+    file_path = Path.cwd() / ".journal" / f"{date_str}.txt"
+    if not file_path.exists():
+        raise FileNotFoundError(f"Journal file {file_path} does not exist")
+    text = file_path.read_text(encoding="utf-8")
 
-    client = openai.OpenAI(api_key=openai_api_key)
-
-    functions = [
-        {
-            "name": "log_note",
-            "description": DESCRIPTION,
-            "parameters": {
-                "type": "object",
-                "properties": {"note": {"type": "string"}},
-                "required": ["note"],
-            },
-        }
-    ]
-
+    client = get_open_api()
     messages = [
-        {"role": "system", "content": "You are CodeScribe."},
+        {"role": "system", "content": "Summarize the following journal entries."},
         {"role": "user", "content": text},
     ]
-
     response = client.chat.completions.create(
         model="gpt-4.1-mini",
         messages=messages,
-        functions=functions,
-        function_call="auto",
         temperature=0,
     )
+    return response.choices[0].message.content.strip()
 
-    message = response.choices[0].message
-    if message.function_call and message.function_call.name == "log_note":
-        args = json.loads(message.function_call.arguments or "{}")
-        note = args.get("note", text)
-    else:
-        note = text
 
-    result = log_note(note)
-    print(result)
+def categorize_journal(day: str | None = None) -> str:
+    """Tag journal entries by theme using OpenAI."""
+    date_str = day or datetime.now().strftime("%Y-%m-%d")
+    file_path = Path.cwd() / ".journal" / f"{date_str}.txt"
+    if not file_path.exists():
+        raise FileNotFoundError(f"Journal file {file_path} does not exist")
+    text = file_path.read_text(encoding="utf-8")
+
+    client = get_open_api()
+    prompt = (
+        "Tag or categorize each journal entry by theme such as bug, idea, "
+        "decision, or question."
+    )
+    messages = [
+        {"role": "system", "content": prompt},
+        {"role": "user", "content": text},
+    ]
+    response = client.chat.completions.create(
+        model="gpt-4.1-mini",
+        messages=messages,
+        temperature=0,
+    )
+    return response.choices[0].message.content.strip()
+
+
+def run_cli(args: list[str]) -> None:
+    """Run one of the available tools from the command line."""
+    if not args or any(a in {"-h", "--help"} for a in args):
+        print("Usage:")
+        print("  python codescribe-agent.py log <text>")
+        print("  python codescribe-agent.py summarize [day]")
+        print("  python codescribe-agent.py tag [day]")
+        print("  python codescribe-agent.py mcp")
+        return
+
+    command, *rest = args
+
+    if command == "log":
+        text = " ".join(rest).strip()
+        print(log_note(text))
+        return
+
+    if command in {"summarize", "summary"}:
+        day = rest[0] if rest else None
+        print(summarize_journal(day))
+        return
+
+    if command in {"tag", "categorize", "categorise"}:
+        day = rest[0] if rest else None
+        print(categorize_journal(day))
+        return
+
+    print(f"Unknown command: {command}", file=sys.stderr)
+    print("Use --help for usage.", file=sys.stderr)
 
 
 def start_server() -> None:
@@ -113,15 +155,22 @@ def start_server() -> None:
     async def logNote(note: str):
         return {"content": [{"type": "text", "text": log_note(note)}]}
 
+    @mcp.tool()
+    async def summarizeJournal(day: str | None = None):
+        return {"content": [{"type": "text", "text": summarize_journal(day)}]}
+
+    @mcp.tool()
+    async def categorizeJournal(day: str | None = None):
+        return {"content": [{"type": "text", "text": categorize_journal(day)}]}
+
     mcp.run()
 
 
 def main() -> None:
-    if len(sys.argv) > 1:
-        text = " ".join(sys.argv[1:]).strip()
-        run_cli(text)
-    else:
+    if len(sys.argv) > 1 and sys.argv[1] == "mcp":
         start_server()
+    else:
+        run_cli(sys.argv[1:])
 
 
 if __name__ == "__main__":
