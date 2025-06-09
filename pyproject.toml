@@ -11,3 +11,10 @@ dependencies = [
     "markdown>=3.5.0",
     "mcp>=1.9.3",
 ]
+
+[project.scripts]
+codescribe = "codescribe.__main__:main"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

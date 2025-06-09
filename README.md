@@ -23,7 +23,7 @@ CodeScribe is an educational example of how to build [Model Context Protocol (MC
 
 ## Extending CodeScribe
 
-You can add new tools by editing `codescribe-agent.py` (Python) or `codescribe-agent.js` (JavaScript). Tools can be deterministic (pure code) or use AI models. See the source for examples of both.
+You can add new tools by editing `codescribe/agent.py` (Python) or `codescribe-agent.js` (JavaScript). Tools can be deterministic (pure code) or use AI models. See the source for examples of both.
 
 ## Troubleshooting
 
@@ -64,7 +64,7 @@ node codescribe-agent.js mcp
 ### Python
 Start the Python server with:
 ```bash
-python codescribe-agent.py mcp
+python -m codescribe mcp
 ```
 
 Each version listens on stdin/stdout so it can be invoked by any MCP-compliant host. Entries are appended to `.journal/YYYY-MM-DD.txt` in the form `[HH:MM:SS] message`.
@@ -76,11 +76,11 @@ Once running, send an MCP `callTool` request with your instruction. The agent lo
 The Python version can run tools directly from the command line:
 
 ```bash
-python codescribe-agent.py log "my note here"
-python codescribe-agent.py summarize        # summarize today's journal
-python codescribe-agent.py summarize 2024-05-01
-python codescribe-agent.py tag 2024-05-01   # categorize entries
-python codescribe-agent.py mcp              # start MCP server
+python -m codescribe log "my note here"
+python -m codescribe summarize        # summarize today's journal
+python -m codescribe summarize 2024-05-01
+python -m codescribe tag 2024-05-01   # categorize entries
+python -m codescribe mcp              # start MCP server
 ```
 
 For the Javascript version you need to use the same commands but using node to run the script, for example:
@@ -108,7 +108,8 @@ Add the following to `.vscode/mcp.json` depending on the implementation you want
             "args": ["run", 
                 "--directory", 
                 "${workspaceFolder}",
-                "${workspaceFolder}/codescribe-agent.py",
+                "-m",
+                "codescribe",
                 "run"
             ]
         }
