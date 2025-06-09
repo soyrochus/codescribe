@@ -1,7 +1,5 @@
-from .agent import main as agent_main
-
-def main() -> None:
-    agent_main()
+# Codescribe - Copyright (c) 2025, licensed: MIT, See LICENSE for details.
+from .agent import main 
 
 if __name__ == "__main__":
     main()

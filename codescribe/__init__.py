@@ -1,0 +1,1 @@
+# Codescribe - Copyright (c) 2025, licensed: MIT, See LICENSE for details.

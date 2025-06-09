@@ -15,6 +15,12 @@ dependencies = [
 [project.scripts]
 codescribe = "codescribe.__main__:main"
 
+[tool.setuptools]
+packages = ["codescribe"]  
+
+[tool.setuptools.package-dir]
+"" = "."
+
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
