@@ -121,6 +121,16 @@ This configuration ensures the Python agent is started correctly as an MCP serve
 
 This tells your MCP-compatible tools how to launch the agent locally. Make sure the `.vscode/mcp.json` file is located in the project root. Only use one of the two implementation as otherwise Github Copilot might get confused about which Agent to run.
 
+### Installing a released version
+
+You can also obtain a released version with `pipx`. Run for example: 
+
+```bash
+pipx install https://github.com/soyrochus/codescribe/releases/download/v0.1.0/codescribe-0.1.0-py3-none-any.whl 
+```
+
+in case of the v0.1.0 release. See the [repo's releases page](https://github.com/soyrochus/codescribe/releases) to obtain the url to the latest on or any other particular release.
+
 
 ## Configuration
 
