@@ -12,9 +12,11 @@ from typing import List, Any
 from dotenv import load_dotenv
 import openai
 
-# Try to load environment variables from a .env file in the same directory as this script
-env_path = Path(__file__).parent / ".env"
-print (f"Loading environment variables from {env_path}")
+
+# Load environment variables from the project root .env file
+project_root = Path(__file__).resolve().parent.parent
+env_path = project_root / ".env"
+print(f"Loading environment variables from {env_path}")
 load_dotenv(env_path)
 
 openai_api_key = os.getenv("OPENAI_API_KEY")
